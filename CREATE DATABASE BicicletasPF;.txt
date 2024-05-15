@@ -1,0 +1,81 @@
+CREATE DATABASE BicicletasPF;
+
+
+USE BicicletasPF;
+
+CREATE TABLE Administradores (
+    ID_Admin BIGINT PRIMARY KEY,
+    Nombre VARCHAR(100) NOT NULL,
+    Apellido VARCHAR(100) NOT NULL,
+    Usuario VARCHAR(50) UNIQUE NOT NULL,
+    Contraseña VARCHAR(255) NOT NULL
+);
+
+
+INSERT INTO Administradores (ID_Admin, Nombre, Apellido, Usuario, Contraseña)
+VALUES
+    (1, 'Juan', 'Pérez', 'juan_admin', 'secreto123'),
+    (2, 'María', 'Gómez', 'maria_g', 'clave456');
+
+
+CREATE TABLE Bicicletas (
+    ID_Bicicleta BIGINT PRIMARY KEY,
+    Marca VARCHAR(255) NOT NULL
+);
+
+
+INSERT INTO Bicicletas (ID_Bicicleta, Marca)
+VALUES
+    (1, 'Trek'),
+    (2, 'Giant'),
+    (3, 'Specialized');
+
+
+CREATE TABLE Clientes (
+    ID_Cliente BIGINT PRIMARY KEY,
+    ID_Admin BIGINT,
+    Nombre VARCHAR(100) NOT NULL,
+    Apellido VARCHAR(100) NOT NULL,
+    Email VARCHAR(255) UNIQUE NOT NULL,
+    Cedula VARCHAR(20) UNIQUE NOT NULL,
+    FOREIGN KEY (ID_Admin) REFERENCES Administradores(ID_Admin)
+);
+
+
+INSERT INTO Clientes (ID_Cliente, ID_Admin, Nombre, Apellido, Email, Cedula)
+VALUES
+    (1, 1, 'Ana', 'García', 'ana@example.com', '1234567890'),
+    (2, 2, 'Carlos', 'López', 'carlos@example.com', '9876543210');
+
+CREATE TABLE Mantenimiento (
+    ID_Mantenimiento BIGINT PRIMARY KEY,
+    ID_Bicicleta BIGINT,
+    Fecha DATETIME,
+    Descripcion TEXT,
+    Costo DECIMAL(10, 2),
+    FOREIGN KEY (ID_Bicicleta) REFERENCES Bicicletas(ID_Bicicleta)
+);
+
+
+INSERT INTO Mantenimiento (ID_Mantenimiento, ID_Bicicleta, Fecha, Descripcion, Costo)
+VALUES
+    (201, 1, '2024-05-03 10:00:00', 'Cambio de cadena y ajuste de frenos', 25.00),
+    (202, 2, '2024-05-04 15:30:00', 'Reemplazo de llanta trasera', 40.00);
+
+
+CREATE TABLE Alquileres (
+    ID_Alquiler BIGINT PRIMARY KEY,
+    ID_Bicicleta BIGINT,
+    ID_Cliente BIGINT,
+    Fecha_Inicio DATETIME,
+    Fecha_Fin DATETIME,
+    Costo DECIMAL(10, 2),
+    FOREIGN KEY (ID_Bicicleta) REFERENCES Bicicletas(ID_Bicicleta),
+    FOREIGN KEY (ID_Cliente) REFERENCES Clientes(ID_Cliente)
+);
+
+
+INSERT INTO Alquileres (ID_Alquiler, ID_Bicicleta, ID_Cliente, Fecha_Inicio, Fecha_Fin, Costo)
+VALUES
+    (101, 1, 1, '2024-05-01 09:00:00', '2024-05-01 11:30:00', 15.50),
+    (102, 2, 2, '2024-05-02 14:00:00', '2024-05-02 16:15:00', 12.75);
